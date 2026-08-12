@@ -1,0 +1,18 @@
+[project]
+name="ProjectByIbrahim"
+version="0.1.0"
+
+[tool.flet]
+org="com.ibrahim"
+
+[tool.flet.app]
+path="."
+
+[tool.flet.android]
+adaptive_icon_background = "#ffffff"
+adaptive_icon_foreground = "assets/icon.png"
+
+[tool.flet.splash]
+hide_animation=true
+color = "#ffffff"
+image = "assets/icon.png"

@@ -1,0 +1,5 @@
+flet
+httpx
+asyncio
+smtplib
+email
