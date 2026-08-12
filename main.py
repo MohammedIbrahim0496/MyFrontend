@@ -957,11 +957,11 @@ def main(page: ft.Page):
     semail=ft.TextField(label="Email", border_color=ft.Colors.WHITE30, text_size=14)
     smass=ft.TextField(label="Message", multiline=True,border_color=ft.Colors.WHITE30, text_size=14,min_lines=4)
     status_text=ft.Text(value="",color=ft.Colors.TRANSPARENT)
-    async def sendm(n,e,m):
+    async def sendm():
         try:
             msg=EmailMessage()
-            coninfo=f"Name :{n} \nEmail :{e} \nMessage :{m}"
-            msg["Subject"]=f"New Contact Submission From {n}"
+            coninfo=f"Name :{sname.value} \nEmail :{semail.value} \nMessage :{smass.value}"
+            msg["Subject"]=f"New Contact Submission From {sname.value}"
             msg["From"]="n.ibrahim.04092006@gmail.com"
             msg["To"]="n.mohammedibrahim19472006@gmail.com"
             msg.set_content(coninfo)
@@ -970,15 +970,15 @@ def main(page: ft.Page):
                 server.send_message(msg)   
             status_text.value ="Email Sent Succesfully!!"
             status_text.color="green"
-            await asyncio.sleep(5)   
-            status_text.value =""
-            status_text.color=ft.Colors.TRANSPARENT
+            #await asyncio.sleep(5)   
+            #status_text.value =""
+            #status_text.color=ft.Colors.TRANSPARENT
         except:
             status_text.value ="Failed To Send Email !!"
             status_text.color="red"
-            await asyncio.sleep(5)   
-            status_text.value =""
-            status_text.color=ft.Colors.TRANSPARENT
+            #await asyncio.sleep(5)   
+            #status_text.value =""
+            #status_text.color=ft.Colors.TRANSPARENT
     # --- CONTACT SECTION ---
     contact_form = ft.Container(
         padding=25,
@@ -996,7 +996,7 @@ def main(page: ft.Page):
                     "Send Message",
                     style=ft.ButtonStyle(bgcolor=ft.Colors.BLUE_600, color=ft.Colors.WHITE),
                     width=400,
-                    height=45,on_click=lambda e:sendm(sname.value,semail.value,smass.value)
+                    height=45,on_click=sendm
                 )
             ]
         )
