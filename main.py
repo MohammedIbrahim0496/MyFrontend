@@ -737,18 +737,18 @@ def main(page: ft.Page):
     nav_bar = ft.Row(
         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
         controls=[
-            ft.Text("MOHAMMED IBRAHIM |  BCA STUDENT", weight=ft.FontWeight.BOLD, size=16, color=ft.Colors.WHITE),
+            ft.Text("MOHAMMED IBRAHIM |  BCA STUDENT", weight=ft.FontWeight.BOLD,size=13, color=ft.Colors.WHITE,expand=1),
             ft.Row(
                 spacing=20,
                 controls=[
-                    ft.TextButton("HOME", style=ft.ButtonStyle(color=ft.Colors.BLUE_400),on_click=go_h),
-                    ft.TextButton("SKILLS", style=ft.ButtonStyle(color=ft.Colors.WHITE70),on_click=go_s),
-                    ft.TextButton("PROJECTS", style=ft.ButtonStyle(color=ft.Colors.WHITE70),on_click=go_p),
-                    ft.TextButton("EXPERIENCE", style=ft.ButtonStyle(color=ft.Colors.WHITE70),on_click=go_c),
-                    ft.TextButton("CONTACT", style=ft.ButtonStyle(color=ft.Colors.WHITE70),on_click=go_c),
-                ]
+                    ft.TextButton("HOME", style=ft.ButtonStyle(color=ft.Colors.BLUE_400,icon_size=1),on_click=go_h,expand=1),
+                    ft.TextButton("SKILLS", style=ft.ButtonStyle(color=ft.Colors.WHITE70,icon_size=1),on_click=go_s,expand=1),
+                    ft.TextButton("PROJECTS", style=ft.ButtonStyle(color=ft.Colors.WHITE70,icon_size=1),on_click=go_p,expand=1),
+                    ft.TextButton("EXPERIENCE", style=ft.ButtonStyle(color=ft.Colors.WHITE70,icon_size=1),on_click=go_c,expand=1),
+                    ft.TextButton("CONTACT", style=ft.ButtonStyle(color=ft.Colors.WHITE70,icon_size=1),on_click=go_c,expand=1),
+                ],expand=1
             )
-        ]
+        ],expand=1
     )
     async def x(e):
         print(e)
@@ -757,7 +757,7 @@ def main(page: ft.Page):
             print(e)
             await page.launch_url("https://github.com/MohammedIbrahim0496") 
     async def z(e):
-         img=ft.Image(src="resume.png") 
+         img=ft.Image(src="resume.png",expand=1,expand_loose=True) 
          page.clean()
          b=ft.Button("Back to main page",bgcolor="blue",width=300,align=ft.Alignment.CENTER,on_click=lambda e:main(page))
          page.add(b,img)
@@ -774,14 +774,14 @@ def main(page: ft.Page):
                     expand=True,
                     spacing=10,
                     controls=[
-                        ft.Text("MOHAMMED IBRAHIM |  BCA STUDENT(Final Year)", size=28, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                        ft.Text("MOHAMMED IBRAHIM |  BCA STUDENT(Final Year)", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
                         ft.Text("Building AI Frontend with Flet, Python, and Developing AI models to perform complex operation", size=15, color=ft.Colors.WHITE70),
                         ft.Row(
                             spacing=10,
                             controls=[
-                                ft.IconButton(icon=ft.Icons.LINK, icon_color=ft.Colors.BLUE_400, tooltip="LinkedIn",on_click= x),
-                                ft.IconButton(icon=ft.Icons.CODE, icon_color=ft.Colors.WHITE, tooltip="GitHub",on_click=y),
-                                ft.IconButton(icon=ft.Icons.DESCRIPTION, icon_color=ft.Colors.WHITE, tooltip="Resume",on_click=z),
+                                ft.IconButton(icon=ft.Icons.LINK, icon_color=ft.Colors.BLUE_400, tooltip="LinkedIn",on_click= x,icon_size=30),
+                                ft.IconButton(icon=ft.Icons.CODE, icon_color=ft.Colors.WHITE, tooltip="GitHub",on_click=y,icon_size=30),
+                                ft.IconButton(icon=ft.Icons.DESCRIPTION, icon_color=ft.Colors.WHITE, tooltip="Resume",on_click=z,icon_size=30),
                             ]
                         )
                     ]
@@ -953,32 +953,68 @@ def main(page: ft.Page):
         ]
     )
 
-    sname=ft.TextField(label="Name", border_color=ft.Colors.WHITE30, text_size=14)
-    semail=ft.TextField(label="Email", border_color=ft.Colors.WHITE30, text_size=14)
-    smass=ft.TextField(label="Message", multiline=True,border_color=ft.Colors.WHITE30, text_size=14,min_lines=4)
+    sname=ft.TextField(value=None,label="Name", border_color=ft.Colors.WHITE30, text_size=14)
+    semail=ft.TextField(value=None,label="Email", border_color=ft.Colors.WHITE30, text_size=14)
+    smass=ft.TextField(value=None,label="Message", multiline=True,border_color=ft.Colors.WHITE30, text_size=14,min_lines=4)
     status_text=ft.Text(value="",color=ft.Colors.TRANSPARENT)
     async def sendm():
-        try:
-            msg=EmailMessage()
-            coninfo=f"Name :{sname.value} \nEmail :{semail.value} \nMessage :{smass.value}"
-            msg["Subject"]=f"New Contact Submission From {sname.value}"
-            msg["From"]="n.ibrahim.04092006@gmail.com"
-            msg["To"]="n.mohammedibrahim19472006@gmail.com"
-            msg.set_content(coninfo)
-            with smtplib.SMTP_SSL("smtp.gmail.com",465) as server:
-                server.login("n.ibrahim.04092006@gmail.com","uxlpbejwlswofocw")
-                server.send_message(msg)   
-            status_text.value ="Email Sent Succesfully!!"
-            status_text.color="green"
-            #await asyncio.sleep(5)   
-            #status_text.value =""
-            #status_text.color=ft.Colors.TRANSPARENT
-        except:
-            status_text.value ="Failed To Send Email !!"
+        if sname.value==None or semail.value==None or smass.value==None:
+            status_text.value ="Make Sure Every Feild Is filled"
             status_text.color="red"
-            #await asyncio.sleep(5)   
-            #status_text.value =""
-            #status_text.color=ft.Colors.TRANSPARENT
+            sname.value=None
+            semail.value=None
+            smass.value=None
+        else:
+            status_text.value ="Sending Email!!"
+            status_text.color="yellow"
+            x=[sname.value,semail.value,smass.value]
+            try:
+                status_text.value ="Sending Email!!"
+                status_text.color="yellow"
+                print("1")
+                ans=httpx.post("https://mybackend-nipe.onrender.com/email",json=x,timeout=20.0)
+                print(ans)
+                answ=ans.json()["email"]
+                print(answ)
+                if answ ==0:
+                    status_text.value ="Email Sent Succesfully!!"
+                    status_text.color="green"
+                    sname.value=None
+                    semail.value=None
+                    smass.value=None
+                else:    
+                    status_text.value =f"{answ}Connection Errortttt \n Make Sure Every Feild Is filled"
+                    status_text.color="red"
+                    sname.value=None
+                    semail.value=None
+                    smass.value=None
+            except Exception as e:
+                status_text.value =f"Connection Error \n Make Sure Your Are Connected To Internet"
+                status_text.color="red"
+                sname.value=None
+                semail.value=None
+                smass.value=None
+            '''try:
+                msg=EmailMessage()
+                coninfo=f"Name :{sname.value} \nEmail :{semail.value} \nMessage :{smass.value}"
+                msg["Subject"]=f"New Contact Submission From {sname.value}"
+                msg["From"]="n.ibrahim.04092006@gmail.com"
+                msg["To"]="n.mohammedibrahim19472006@gmail.com"
+                msg.set_content(coninfo)
+                with smtplib.SMTP_SSL("smtp.gmail.com",465) as server:
+                    server.login("n.ibrahim.04092006@gmail.com","uxlpbejwlswofocw")
+                    server.send_message(msg)   
+                status_text.value ="Email Sent Succesfully!!"
+                status_text.color="green"
+                #await asyncio.sleep(5)   
+                #status_text.value =""
+                #status_text.color=ft.Colors.TRANSPARENT
+            except:
+                status_text.value ="Failed To Send Email !!"
+                status_text.color="red"
+                #await asyncio.sleep(5)   
+                #status_text.value =""
+                #status_text.color=ft.Colors.TRANSPARENT'''
     # --- CONTACT SECTION ---
     contact_form = ft.Container(
         padding=25,
