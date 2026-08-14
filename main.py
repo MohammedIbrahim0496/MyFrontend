@@ -2,8 +2,6 @@ import flet as ft
 import os
 import asyncio
 import httpx
-import smtplib
-from email.message import EmailMessage
 i=0
 pl1=[]
 pl2=[]
@@ -958,6 +956,8 @@ def main(page: ft.Page):
     smass=ft.TextField(value=None,label="Message", multiline=True,border_color=ft.Colors.WHITE30, text_size=14,min_lines=4)
     status_text=ft.Text(value="",color=ft.Colors.TRANSPARENT)
     async def sendm():
+        status_text.value ="Sending Email!!"
+        status_text.color="yellow"
         if sname.value==None or semail.value==None or smass.value==None:
             status_text.value ="Make Sure Every Feild Is filled"
             status_text.color="red"
@@ -965,8 +965,6 @@ def main(page: ft.Page):
             semail.value=None
             smass.value=None
         else:
-            status_text.value ="Sending Email!!"
-            status_text.color="yellow"
             x=[sname.value,semail.value,smass.value]
             try:
                 status_text.value ="Sending Email!!"
@@ -994,27 +992,6 @@ def main(page: ft.Page):
                 sname.value=None
                 semail.value=None
                 smass.value=None
-            '''try:
-                msg=EmailMessage()
-                coninfo=f"Name :{sname.value} \nEmail :{semail.value} \nMessage :{smass.value}"
-                msg["Subject"]=f"New Contact Submission From {sname.value}"
-                msg["From"]="n.ibrahim.04092006@gmail.com"
-                msg["To"]="n.mohammedibrahim19472006@gmail.com"
-                msg.set_content(coninfo)
-                with smtplib.SMTP_SSL("smtp.gmail.com",465) as server:
-                    server.login("n.ibrahim.04092006@gmail.com","uxlpbejwlswofocw")
-                    server.send_message(msg)   
-                status_text.value ="Email Sent Succesfully!!"
-                status_text.color="green"
-                #await asyncio.sleep(5)   
-                #status_text.value =""
-                #status_text.color=ft.Colors.TRANSPARENT
-            except:
-                status_text.value ="Failed To Send Email !!"
-                status_text.color="red"
-                #await asyncio.sleep(5)   
-                #status_text.value =""
-                #status_text.color=ft.Colors.TRANSPARENT'''
     # --- CONTACT SECTION ---
     contact_form = ft.Container(
         padding=25,
