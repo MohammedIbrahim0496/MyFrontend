@@ -2,6 +2,8 @@ import flet as ft
 import os
 import asyncio
 import httpx
+from dotenv import load_dotenv
+load_dotenv()
 i=0
 pl1=[]
 pl2=[]
@@ -105,7 +107,88 @@ def main(page: ft.Page):
                     )
                 )
                 page.update()
-            calpage()    
+            calpage() 
+    def spame():
+        page.clean()
+        page.theme_mode=ft.ThemeMode.DARK
+        page.title="Spam Email Detection"
+        page.bgcolor="#FCFCFC"
+        page.update()
+        page.scroll=ft.ScrollMode.AUTO
+        email=ft.TextField(value=None,label="Enter Your Email",multiline=True,min_lines=5,expand=1,color="black",cursor_color="black",max_lines=10)
+        r=ft.Text(value="",color=ft.Colors.TRANSPARENT,size=22,weight=ft.FontWeight.BOLD)
+        sb=ft.ProgressBar(value=0.0,expand=1,color="#FF0202")
+        hb=ft.ProgressBar(value=0.0,expand=1,color="#08D220")
+        ham=0.0
+        spam=0.0
+        async def chemail():
+            r.value=f"Detecting Spam In Email..."
+            r.color="#F7F304"
+            page.update()
+            await asyncio.sleep(1)
+            try:    
+                x=email.value
+                akey=os.getenv("AKEY")
+                akey+="/spam"
+                spam=httpx.post(akey,json=x,timeout=20.0)
+                spam=spam.json()["prediction"]
+                ham=1-spam
+                if ham>spam:
+                    hb.value=ham
+                    sb.value=spam
+                    r.value=f"Email Is Ham(NOT A SPAM) {spam*100:.2f}% SPAM DETECTED"
+                    r.color="#00A80B"
+                else:
+                    hb.value=ham
+                    sb.value=spam
+                    r.value=f"Email Is SPAM (BE CAREFUL)  {spam*100:.2f}% SPAM DETECTED"
+                    r.color="#FF0202"
+                page.update()    
+            except Exception as e:
+                print(e)
+                r.value="Error Occured"
+                r.color="#FF0202"
+                page.update()
+            finally:
+                await asyncio.sleep(5)
+                email.value=None
+                r.value=""
+                sb.value=0.0
+                hb.value=0.0
+                page.update()    
+        ep= ft.Container(
+            padding=30,
+            bgcolor="#73D4F5",
+            border_radius=15,
+            expand=1,
+            content=ft.Column(
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                controls=[
+                    ft.Row(
+                        expand=True,
+                        spacing=10,
+                        controls=[
+                            ft.Text("Spam", size=20, weight=ft.FontWeight.BOLD, color="#FF0202"),
+                            sb,
+                        ]
+                    ),
+                    ft.Row(
+                        expand=True,
+                        spacing=10,
+                        controls=[
+                            ft.Text("Ham ", size=20, weight=ft.FontWeight.BOLD, color="#196422"),
+                            hb,
+                        ]
+                    ),
+                ]
+            )
+        )
+        page.add( ft.Column(
+            controls=[ft.Button("Back To Main Page",color="white",bgcolor="blue"),
+                email,
+                ft.Button("Submit",color="white",bgcolor="blue",on_click=chemail),
+                r,
+                ep]))           
     def diab():
         page.theme_mode=ft.ThemeMode.DARK
         page.title="Diabetes Predictor"
@@ -116,7 +199,9 @@ def main(page: ft.Page):
         def click():
             try:
                 x=[float(p.value),float(g.value),float(bp.value),float(s.value),float(i.value),float(b.value),float(d.value),float(a.value)]
-                ans=httpx.post("https://mybackend-nipe.onrender.com/predict",json=x)
+                akey=os.getenv("AKEY")
+                akey+="/predict"
+                ans=httpx.post(akey,json=x,timeout=20.0)
                 ans=ans.json()["prediction"]
                 if ans == 1:
                     page.clean()
@@ -230,7 +315,9 @@ def main(page: ft.Page):
                     f.value=0
                 be=float(bp.value) /100000    
                 x=[int(g.value),float(be),float(s.value),int(f.value),int(se.value),int(tr.value),int(ow.value)]
-                ans=httpx.post("https://mybackend-nipe.onrender.com/carpredict",json=x)
+                akey=os.getenv("AKEY")
+                akey+="/carpredict"
+                ans=httpx.post(akey,json=x,timeout=20.0)
                 ans=ans.json()["prediction"]
                 if be<=4.0:
                     answer=int(ans*10000)
@@ -740,10 +827,10 @@ def main(page: ft.Page):
                 spacing=20,
                 controls=[
                     ft.TextButton("HOME", style=ft.ButtonStyle(color=ft.Colors.BLUE_400,icon_size=1),on_click=go_h,expand=1),
-                    ft.TextButton("SKILLS", style=ft.ButtonStyle(color=ft.Colors.WHITE70,icon_size=1),on_click=go_s,expand=1),
-                    ft.TextButton("PROJECTS", style=ft.ButtonStyle(color=ft.Colors.WHITE70,icon_size=1),on_click=go_p,expand=1),
-                    ft.TextButton("EXPERIENCE", style=ft.ButtonStyle(color=ft.Colors.WHITE70,icon_size=1),on_click=go_c,expand=1),
-                    ft.TextButton("CONTACT", style=ft.ButtonStyle(color=ft.Colors.WHITE70,icon_size=1),on_click=go_c,expand=1),
+                    ft.TextButton("SKILLS", style=ft.ButtonStyle(color=ft.Colors.WHITE_70,icon_size=1),on_click=go_s,expand=1),
+                    ft.TextButton("PROJECTS", style=ft.ButtonStyle(color=ft.Colors.WHITE_70,icon_size=1),on_click=go_p,expand=1),
+                    ft.TextButton("EXPERIENCE", style=ft.ButtonStyle(color=ft.Colors.WHITE_70,icon_size=1),on_click=go_c,expand=1),
+                    ft.TextButton("CONTACT", style=ft.ButtonStyle(color=ft.Colors.WHITE_70,icon_size=1),on_click=go_c,expand=1),
                 ],expand=1
             )
         ],expand=1
@@ -773,7 +860,7 @@ def main(page: ft.Page):
                     spacing=10,
                     controls=[
                         ft.Text("MOHAMMED IBRAHIM |  BCA STUDENT(Final Year)", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
-                        ft.Text("Building AI Frontend with Flet, Python, and Developing AI models to perform complex operation", size=15, color=ft.Colors.WHITE70),
+                        ft.Text("Building AI Frontend with Flet, Python, and Developing AI models to perform complex operation", size=15, color=ft.Colors.WHITE_70),
                         ft.Row(
                             spacing=10,
                             controls=[
@@ -851,7 +938,7 @@ def main(page: ft.Page):
                 controls=[
                     ft.Image(src=img_url, height=140, border_radius=8),
                     ft.Text(title, weight=ft.FontWeight.BOLD, size=16, color=ft.Colors.WHITE),
-                    ft.Text(description, size=12, color=ft.Colors.WHITE70, max_lines=2, overflow=ft.TextOverflow.ELLIPSIS),
+                    ft.Text(description, size=12, color=ft.Colors.WHITE_70, max_lines=2, overflow=ft.TextOverflow.ELLIPSIS),
                     ft.Row(
                         spacing=8,
                         controls=[
@@ -873,16 +960,16 @@ def main(page: ft.Page):
         spacing=20,
         controls=[
             build_project_card(
-                "TIC TAC TOE",
-                "Implemented an AI player as opponent.",
-                ["Python", "Flet","Minmax"],
-                "tic.png",tic_tac
-            ),
-            build_project_card(
                 "Calculator",
                 "Learned creating UI.",
                 ["Python", "Flet"],
                 "calc.png",calll
+            ),
+            build_project_card(
+                "TIC TAC TOE",
+                "Implemented an AI player as opponent.",
+                ["Python", "Flet","Minmax"],
+                "tic.png",tic_tac
             ),
             build_project_card(
                 "Diabetes Predictor",
@@ -895,6 +982,12 @@ def main(page: ft.Page):
                 "An model that is capable of predicting the current value of owned vehicle.",
                 ["Python", "Flet", "Scikit Learn"],
                 "car.png",Vehicle_value
+            ),
+            build_project_card(
+                "Spam Email Detector",
+                "An model that is capable of predicting whether an email is spam or not.",
+                ["Python", "Flet", "Scikit Learn"],
+                "spame.png",spame
             ),
         ]
     ),
@@ -920,7 +1013,7 @@ def main(page: ft.Page):
                     controls=[
                         ft.Text(f"{role} - {company}", weight=ft.FontWeight.BOLD, size=16, color=ft.Colors.WHITE),
                         ft.Text(period, size=12, color=ft.Colors.BLUE_400),
-                        *[ft.Text(f"• {bullet}", size=13, color=ft.Colors.WHITE70) for bullet in bullets]
+                        *[ft.Text(f"• {bullet}", size=13, color=ft.Colors.WHITE_70) for bullet in bullets]
                     ]
                 )
             ]
@@ -951,13 +1044,11 @@ def main(page: ft.Page):
         ]
     )
 
-    sname=ft.TextField(value=None,label="Name", border_color=ft.Colors.WHITE30, text_size=14)
-    semail=ft.TextField(value=None,label="Email", border_color=ft.Colors.WHITE30, text_size=14)
-    smass=ft.TextField(value=None,label="Message", multiline=True,border_color=ft.Colors.WHITE30, text_size=14,min_lines=4)
+    sname=ft.TextField(value=None,label="Name", border_color=ft.Colors.WHITE_30, text_size=14)
+    semail=ft.TextField(value=None,label="Email", border_color=ft.Colors.WHITE_30, text_size=14)
+    smass=ft.TextField(value=None,label="Message", multiline=True,border_color=ft.Colors.WHITE_30, text_size=14,min_lines=4)
     status_text=ft.Text(value="",color=ft.Colors.TRANSPARENT)
     async def sendm():
-        status_text.value ="Sending Email!!"
-        status_text.color="yellow"
         if sname.value==None or semail.value==None or smass.value==None:
             status_text.value ="Make Sure Every Feild Is filled"
             status_text.color="red"
@@ -965,33 +1056,44 @@ def main(page: ft.Page):
             semail.value=None
             smass.value=None
         else:
+            status_text.value ="Sending Email!!"
+            status_text.color="yellow"
+            page.update()
+            await asyncio.sleep(1)
             x=[sname.value,semail.value,smass.value]
             try:
                 status_text.value ="Sending Email!!"
                 status_text.color="yellow"
-                print("1")
-                ans=httpx.post("https://mybackend-nipe.onrender.com/email",json=x,timeout=20.0)
-                print(ans)
+                akey=os.getenv("AKEY")
+                akey+="/email"
+                ans=httpx.post(akey,json=x,timeout=20.0)
                 answ=ans.json()["email"]
-                print(answ)
                 if answ ==0:
                     status_text.value ="Email Sent Succesfully!!"
                     status_text.color="green"
                     sname.value=None
                     semail.value=None
                     smass.value=None
+                    page.update()
                 else:    
                     status_text.value =f"{answ}Connection Errortttt \n Make Sure Every Feild Is filled"
                     status_text.color="red"
                     sname.value=None
                     semail.value=None
                     smass.value=None
+                    page.update()
             except Exception as e:
                 status_text.value =f"Connection Error \n Make Sure Your Are Connected To Internet"
                 status_text.color="red"
                 sname.value=None
                 semail.value=None
                 smass.value=None
+                page.update()
+            finally:
+                await asyncio.sleep(4)    
+                status_text.value =""
+                status_text.color=ft.Colors.TRANSPARENT 
+                page.update()   
     # --- CONTACT SECTION ---
     contact_form = ft.Container(
         padding=25,
