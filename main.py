@@ -1147,7 +1147,7 @@ def main(page: ft.Page):
         ft.Divider(height=40, color=ft.Colors.TRANSPARENT),
         ft.Container(
             alignment=ft.Alignment.CENTER,
-            content=ft.Text("© 2026 Mohammed Ibrahim | Built with Flet", size=12, color=ft.Colors.WHITE38)
+            content=ft.Text("© 2026 Mohammed Ibrahim | Built with Flet", size=12, color=ft.Colors.WHITE_38)
         )
         )
 
