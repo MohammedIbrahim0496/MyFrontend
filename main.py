@@ -126,7 +126,7 @@ def main(page: ft.Page):
             await asyncio.sleep(1)
             try:    
                 x=email.value
-                spam=httpx.post("/api/spam",json=x,timeout=20.0)
+                spam=httpx.post("https://mybackend-nipe.onrender.com/spam",json=x,timeout=20.0)
                 spam=spam.json()["prediction"]
                 ham=1-spam
                 if ham>spam:
@@ -195,7 +195,7 @@ def main(page: ft.Page):
         def click():
             try:
                 x=[float(p.value),float(g.value),float(bp.value),float(s.value),float(i.value),float(b.value),float(d.value),float(a.value)]
-                ans=httpx.post("/api/predict",json=x,timeout=20.0)
+                ans=httpx.post("https://mybackend-nipe.onrender.com/predict",json=x,timeout=20.0)
                 ans=ans.json()["prediction"]
                 if ans == 1:
                     page.clean()
@@ -309,7 +309,7 @@ def main(page: ft.Page):
                     f.value=0
                 be=float(bp.value) /100000    
                 x=[int(g.value),float(be),float(s.value),int(f.value),int(se.value),int(tr.value),int(ow.value)]
-                ans=httpx.post("/api/carpredict",json=x,timeout=20.0)
+                ans=httpx.post("https://mybackend-nipe.onrender.com/carpredict",json=x,timeout=20.0)
                 ans=ans.json()["prediction"]
                 if be<=4.0:
                     answer=int(ans*10000)
@@ -1056,7 +1056,7 @@ def main(page: ft.Page):
             try:
                 status_text.value ="Sending Email!!"
                 status_text.color="yellow"
-                ans=httpx.post("/api/email",json=x,timeout=20.0)
+                ans=httpx.post("https://mybackend-nipe.onrender.com/email",json=x,timeout=20.0)
                 answ=ans.json()["email"]
                 if answ ==0:
                     status_text.value ="Email Sent Succesfully!!"
