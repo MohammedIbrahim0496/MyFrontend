@@ -180,7 +180,7 @@ def main(page: ft.Page):
             )
         )
         page.add( ft.Column(
-            controls=[ft.Button("Back To Main Page",color="white",bgcolor="blue"),
+            controls=[ft.Button("Back To Main Page",color="white",bgcolor="blue",on_click=lambda e:main(page)),
                 email,
                 ft.Button("Submit",color="white",bgcolor="blue",on_click=chemail),
                 r,
