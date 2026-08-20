@@ -9,6 +9,9 @@ r=0
 
 
 def main(page: ft.Page):
+    ico=os.path.abspath(r"C:\Users\nmoha\OneDrive\Desktop\ibrahim-projects\Frontend\assets\favicon.png")
+    page.window.icon=ico
+    url_launcher=ft.UrlLauncher()
     async def go_h(e):
         await page.scroll_to(offset=0.0,duration=ft.Duration(milliseconds=300),curve=ft.AnimationCurve.EASE_IN_OUT)
 
@@ -38,14 +41,57 @@ def main(page: ft.Page):
             )
         ],expand=1
     )
-    async def x(e):
-        print(e)
-        await page.launch_url("https://www.linkedin.com/in/mohammed-ibrahim-6a0796389")
-    async def y(e):
-            print(e)
-            await page.launch_url("https://github.com/MohammedIbrahim0496") 
-    img=ft.Image(src="resume.png",expand=1,expand_loose=True)
-    async def z(e):
+    async def linkedin(e):
+        await url_launcher.launch_url("https://www.linkedin.com/in/mohammed-ibrahim-6a0796389")
+    async def github(e):
+        await url_launcher.launch_url("https://github.com/MohammedIbrahim0496")
+    img=ft.Container(
+            padding=30,
+            bgcolor="#FFFFFF",
+            border_radius=15,
+            expand=1,
+            content=ft.Row(
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                controls=[
+                    ft.Column(
+                        expand=True,
+                        spacing=10,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        controls=[
+                            ft.Text("MOHAMMED IBRAHIM", size=22, weight=ft.FontWeight.BOLD, color=ft.Colors.BLACK),
+                            ft.Text("Bangalore, Karnataka", size=12, color=ft.Colors.BLACK),
+                            ft.Text("Mobile : 8884624425", size=12, color=ft.Colors.BLACK),
+                            ft.Text("Gmail : n.mohammedibrahim19472006@gmail.com", size=12, color=ft.Colors.BLACK),
+                            ft.Row(alignment=ft.MainAxisAlignment.CENTER,expand=1,
+                                    controls=[ft.Text("Linkedin : ", size=12, color=ft.Colors.BLACK),
+                                               ft.TextButton("https://www.linkedin.com/in/mohammed-ibrahim-6a0796389", style=ft.ButtonStyle(color=ft.Colors.BLUE,icon_size=1),on_click=linkedin)
+                                               ]
+                                ),
+                            ft.Row(alignment=ft.MainAxisAlignment.CENTER,expand=1,
+                                    controls=[ft.Text("GitHub : ", size=12, color=ft.Colors.BLACK),
+                                              ft.TextButton("https://github.com/MohammedIbrahim0496", style=ft.ButtonStyle(color=ft.Colors.BLUE,icon_size=1),on_click=github),
+                                              ]
+                                ),
+                            ft.Text("\nPROFESSIONAL SUMMARY\n", size=14, color=ft.Colors.BLACK, weight=ft.FontWeight.BOLD), 
+                            ft.Text("Final-year BCA student with strong foundations in Python, Machine Learning (Scikit-learn), and Deep Learning (PyTorch). Experienced in deploying ML applications using Flask, Render, and Netlify. Currently learning Generative AI and FastAPI while building production-ready AI projects.", size=12, color=ft.Colors.BLACK),
+                            ft.Column(horizontal_alignment=ft.CrossAxisAlignment.START,controls=[ft.Text("TECHNICAL SKILLS :", size=14, weight=ft.FontWeight.BOLD, color=ft.Colors.BLACK),
+                            ft.Text("•Python, C, C++ \n• Scikit-learn \n• PyTorch \n• Pandas \n• NumPy \n• Matplotlib \n• Flask \n• Render \n• Netlify \n• Git \n• GitHub \n• VS Code \n• Jupyter • FastAPI \n•Flet (For UI)\n•Machine Learning\n•Deep Learning\n•PostgreSQL", size=12, color=ft.Colors.BLACK),
+                            ft.Text("\nPROJECTS\n", size=14, color=ft.Colors.BLACK, weight=ft.FontWeight.BOLD),
+                            ft.Text("• Diabetes Prediction – Built and deployed an ML model using Scikit-learn, FastAPI, and Render.", size=12, color=ft.Colors.BLACK),
+                            ft.Text("• Vehicle price Prediction – Built and deployed an ML model using Scikit-learn, FastAPI, and Render.", size=12, color=ft.Colors.BLACK),
+                            ft.Text("• Deep Learning Classification – Implemented and trained a neural network in PyTorch for Spam Email/classification tasks", size=12, color=ft.Colors.BLACK),
+                            ft.Text("\n EDUCATION\n", size=14, color=ft.Colors.BLACK, weight=ft.FontWeight.BOLD),
+                            ft.Text("• Bachelor of Computer Applications (BCA) \n Government First Grade College, \n Bangalore North University Expected Graduation: 2027", size=12, color=ft.Colors.BLACK),
+                            ft.Text("\n CURRENT LEARNING\n", size=14, color=ft.Colors.BLACK, weight=ft.FontWeight.BOLD),
+                            ft.Text("• Generative AI \n• Transformers \n• Large Language Models\n •LangChain \n •LangGraph\n •Agentic AI", size=12, color=ft.Colors.BLACK),
+                            ft.Text("\n SOFT SKILLS\n", size=14, color=ft.Colors.BLACK, weight=ft.FontWeight.BOLD),
+                            ft.Text("•Problem Solving \n• Analytical Thinking \n• Communication \n• Teamwork", size=12, color=ft.Colors.BLACK),])
+                        ]
+                    ),
+                ]
+            )
+        )
+    async def resume(e):
             asyncio.create_task(page.push_route("/resume"))          
     # --- HERO / HEADER SECTION ---
     hero_section = ft.Container(
@@ -64,15 +110,15 @@ def main(page: ft.Page):
                         ft.Row(
                             spacing=10,
                             controls=[
-                                ft.IconButton(icon=ft.Icons.LINK, icon_color=ft.Colors.BLUE_400, tooltip="LinkedIn",on_click= x,icon_size=30),
-                                ft.IconButton(icon=ft.Icons.CODE, icon_color=ft.Colors.WHITE, tooltip="GitHub",on_click=y,icon_size=30),
-                                ft.IconButton(icon=ft.Icons.DESCRIPTION, icon_color=ft.Colors.WHITE, tooltip="Resume",on_click=z,icon_size=30),
+                                ft.IconButton(icon=ft.Icons.LINK, icon_color=ft.Colors.BLUE_400, tooltip="LinkedIn",on_click= linkedin,icon_size=30),
+                                ft.IconButton(icon=ft.Icons.CODE, icon_color=ft.Colors.WHITE, tooltip="GitHub",on_click=github,icon_size=30),
+                                ft.IconButton(icon=ft.Icons.DESCRIPTION, icon_color=ft.Colors.WHITE, tooltip="Resume",on_click=resume,icon_size=30),
                             ]
                         )
                     ]
                 ),
                 ft.Container(
-                    border=ft.Border.all(3, ft.Colors.BLUE_500),
+                    border=ft.Border.all(2, ft.Colors.BLUE_500),
                     shape=ft.BoxShape.CIRCLE,
                     content=ft.CircleAvatar(
                         radius=60,
